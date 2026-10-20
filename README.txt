@@ -27,6 +27,11 @@ SETTINGS WALI BAAT:
   khaali mile gi. Jab koi working free stream dobara ayegi, channel
   khud list mein aa jaye ga.
 
+NAYE FEATURES:
+- Home par "Install App" button (ek tap se install).
+- Player mein "Pichla / Agla" button — back kiye baghair channel badlo.
+- Home par "Recently Watched" — jo channel dekha, wo dobara wahin milta hai.
+
 FAVORITES:
 - Kisi channel ke sath ☆ dabane se wo ⭐ Favorites mein save ho jata hai
   (mobile ke andar hi save hota hai).
