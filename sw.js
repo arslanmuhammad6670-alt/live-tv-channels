@@ -1,5 +1,5 @@
-const CACHE = 'livetv-v9';
-const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'livetv-v10';
+const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'data-movies.json'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
