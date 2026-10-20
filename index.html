@@ -140,6 +140,7 @@
     <div class="fcard cric" id="cricCard"><span class="em">🏏</span><span class="lb">Cricket</span><span class="sub">PTV Sports, Willow aur tamam cricket channels</span></div>
     <div class="fcard foot" id="footCard"><span class="em">⚽</span><span class="lb">Football</span><span class="sub">beIN, ESPN aur tamam football channels</span></div>
     <div class="fcard" id="m3uCard" style="display:none; grid-column:1/-1; background:linear-gradient(160deg,#3b0764,#0f1930)"><span class="em">📂</span><span class="lb">Meri Playlist</span><span class="sub" id="m3uCardSub">Tumhari apni M3U playlist ke channels</span></div>
+    <div class="fcard" id="sportsPlCard" style="grid-column:1/-1; background:linear-gradient(160deg,#7c2d12,#0f1930)"><span class="em">🏆</span><span class="lb">Sports M3U Playlist</span><span class="sub">iptv-org ki sports list — built-in (283 channels)</span></div>
   </div>
   <div id="recentWrap" style="display:none">
     <h2>🕘 Recently Watched</h2>
@@ -750,6 +751,7 @@ document.getElementById('m3uRemoveBtn').addEventListener('click', () => {
   renderCustomCard();
 });
 document.getElementById('m3uCard').addEventListener('click', () => openList('📂 Meri Playlist', customChannels, 'Ye channels tumhari apni M3U playlist se hain — sirf is device par hain.'));
+document.getElementById('sportsPlCard').addEventListener('click', () => openList('🏆 Sports M3U Playlist', (DATA ? DATA.channels : []).filter(c => c.pl), 'Ye channels iptv-org ki official sports playlist se hain — built-in.'));
 renderCustomCard();
 
 /* ---------- Settings ---------- */
