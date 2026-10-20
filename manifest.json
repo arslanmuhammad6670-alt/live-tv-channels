@@ -1,5 +1,5 @@
 {
-  "background_color": "#ffffff",
+  "background_color": "#0a1128",
   "description": "Free TV channels from every country \u2014 sports, comedy, movies, drama, news.",
   "display": "standalone",
   "icons": [
@@ -20,5 +20,5 @@
   "scope": ".",
   "short_name": "Live TV Channels",
   "start_url": ".",
-  "theme_color": "#ffffff"
+  "theme_color": "#0a1128"
 }
