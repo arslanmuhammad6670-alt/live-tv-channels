@@ -107,9 +107,22 @@
   .fcard .em { font-size:34px; display:block; margin-bottom:6px; }
   .fcard .lb { font-size:16px; font-weight:800; color:#fff; }
   .fcard .sub { font-size:11.5px; color:#9fb4dd; display:block; margin-top:2px; }
+  /* v6 — native app feel: bottom tabs, splash, fullscreen */
+  .screen { padding-bottom:86px; }
+  #favTop, #setTop { display:none; }
+  #tabbar { position:fixed; left:0; right:0; bottom:0; z-index:40; background:#0d1730; border-top:1px solid #1c2947; display:flex; padding:6px 4px calc(6px + env(safe-area-inset-bottom)); }
+  #tabbar button { flex:1; background:none; border:none; color:#8fa1c4; font-size:11px; font-weight:600; cursor:pointer; padding:4px 0 2px; }
+  #tabbar button .tem { font-size:21px; display:block; margin-bottom:2px; }
+  #tabbar button.on { color:#4ade80; }
+  #splash { position:fixed; inset:0; z-index:100; background:#0a1128; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; transition:opacity .4s; }
+  #splash.hide { opacity:0; pointer-events:none; }
+  #splash .slogo { font-size:64px; }
+  #splash .sname { font-size:22px; font-weight:800; color:#fff; }
+  #splash .ssub { font-size:13px; color:#8fa1c4; }
 </style>
 </head>
 <body>
+<div id="splash"><div class="slogo">📺</div><div class="sname">Live TV Channels</div><div class="ssub">Loading channels...</div></div>
 <header>
   <div class="logo">📺 Live TV Channels</div>
   <div class="sp"></div>
@@ -182,6 +195,7 @@
   </div>
   <div class="navrow">
     <button id="prevCh">⏮ Pichla</button>
+    <button id="fsBtn">⛶ Full Screen</button>
     <button id="nextCh">Agla ⏭</button>
   </div>
   <div class="msg">Agar ek stream band mile to app khud dusri stream try karta hai.<br>Sab streams band hon to koi aur channel try karein.</div>
@@ -214,6 +228,13 @@
   </div>
 </div>
 
+<nav id="tabbar">
+  <button data-tab="home" class="on"><span class="tem">🏠</span>Home</button>
+  <button data-tab="sports"><span class="tem">⚽</span>Sports</button>
+  <button data-tab="favs"><span class="tem">⭐</span>Favorites</button>
+  <button data-tab="settings"><span class="tem">⚙️</span>Settings</button>
+</nav>
+
 <div id="toast"></div>
 
 <script>
@@ -245,6 +266,8 @@ function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  const tabFor = { 'scr-home':'home', 'scr-sports':'sports', 'scr-settings':'settings' };
+  document.querySelectorAll('#tabbar button').forEach(b => b.classList.toggle('on', b.dataset.tab === tabFor[id]));
 }
 function go(id) { navStack.push(id); show(id); }
 function back() {
@@ -278,11 +301,13 @@ async function loadData() {
   }
   if (!DATA) {
     document.getElementById('countryList').innerHTML = '<div class="msg">Channels load nahi ho sake.<br>Internet check karke app dobara kholein.</div>';
+    hideSplash();
     return;
   }
   renderCountries('');
   renderSportsList('');
   loadHomeMatches();
+  hideSplash();
 }
 function chans() { return DATA ? DATA.channels : []; }
 
@@ -613,6 +638,29 @@ function startPlayback(ch) {
   };
   tryNext();
 }
+
+/* ---------- Bottom tabs + splash + fullscreen (v6) ---------- */
+function hideSplash() {
+  const s = document.getElementById('splash');
+  if (s) { s.classList.add('hide'); setTimeout(() => { try { s.remove(); } catch(e) {} }, 500); }
+}
+setTimeout(hideSplash, 4000);
+document.querySelectorAll('#tabbar button').forEach(b => b.addEventListener('click', () => {
+  const t = b.dataset.tab;
+  stopPlayer();
+  if (t === 'home') { navStack = ['scr-home']; show('scr-home'); renderCats(); renderRecent(); }
+  else if (t === 'sports') { navStack = ['scr-home']; openSports(); }
+  else if (t === 'favs') { navStack = ['scr-home']; openFavs(); }
+  else if (t === 'settings') { navStack = ['scr-home']; go('scr-settings'); }
+}));
+document.getElementById('fsBtn').addEventListener('click', async () => {
+  const v = document.getElementById('vid');
+  try {
+    if (v.requestFullscreen) await v.requestFullscreen();
+    else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+    if (screen.orientation && screen.orientation.lock) { try { await screen.orientation.lock('landscape'); } catch(e) {} }
+  } catch(e) { toast('Full screen is device par nahi ho saka'); }
+});
 
 /* ---------- Settings ---------- */
 const tg = document.getElementById('adultToggle');
