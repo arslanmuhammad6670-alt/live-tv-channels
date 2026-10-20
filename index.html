@@ -578,21 +578,32 @@ function startPlayback(ch) {
   const urls = [ch.u].concat(ch.a || []);
   let idx = 0;
   const st = document.getElementById('playStatus');
+  const v = document.getElementById('vid');
+  let watchdog = null, progressed = false;
+  const clearWatch = () => { if (watchdog) { clearTimeout(watchdog); watchdog = null; } };
+  const onProgress = () => { progressed = true; clearWatch(); };
+  v.addEventListener('playing', onProgress);
+  const cleanup = () => { v.removeEventListener('playing', onProgress); clearWatch(); };
   const tryNext = () => {
-    if (seq !== playSeq) return;
+    if (seq !== playSeq) { cleanup(); return; }
+    clearWatch();
+    progressed = false;
     if (idx >= urls.length) {
+      cleanup();
       st.textContent = 'Is channel ki saari streams abhi band hain — koi aur channel try karein.';
       return;
     }
     const url = urls[idx++];
     st.textContent = idx > 1 ? 'Pehli stream band thi — dusri working stream lag rahi hai...' : 'Loading...';
     stopPlayer();
-    const v = document.getElementById('vid');
+    /* Watchdog: agar 12 second mein video aage na barhe to agli stream try karo (band stream par app atke na). */
+    watchdog = setTimeout(() => { if (seq === playSeq && !progressed) tryNext(); }, 12000);
     if (window.Hls && Hls.isSupported() && url.includes('.m3u8')) {
-      hls = new Hls({ maxBufferLength: 30, capLevelToPlayerSize: true });
+      hls = new Hls({ maxBufferLength: 30, capLevelToPlayerSize: true, manifestLoadingTimeOut: 10000, levelLoadingTimeOut: 10000, fragLoadingTimeOut: 15000 });
       hls.loadSource(url);
       hls.attachMedia(v);
       hls.on(Hls.Events.MANIFEST_PARSED, () => { if (seq !== playSeq) return; applyQuality(); st.textContent = ch.n; v.play().catch(() => { st.textContent = 'Play button dabayein ▶'; }); });
+      hls.on(Hls.Events.FRAG_BUFFERED, () => { if (seq === playSeq) onProgress(); });
       hls.on(Hls.Events.ERROR, (ev, data) => { if (seq === playSeq && data.fatal) tryNext(); });
     } else {
       v.src = url;
