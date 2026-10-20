@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Live TV Channels</title>
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0a1128">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -69,6 +69,45 @@
   #adSlot { display:none; margin:14px 0 0; text-align:center; }
   #toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 18px; border-radius:22px; font-size:14px; display:none; z-index:50; }
 </style>
+<style>
+  /* v5 — Dark sporty theme (Cricify-style, sports first) */
+  body { background:#0a1128; color:#e8edf7; }
+  header { background:#0a1128; border-bottom:1px solid #1c2947; }
+  header .logo { color:#4ade80; }
+  .iconbtn { background:#131f3d; border-color:#22335e; color:#e8edf7; }
+  h2 { color:#e8edf7; }
+  .card { background:#131f3d; border-color:#22335e; color:#e8edf7; }
+  .card:active { background:#1a2a52; }
+  .card.adult { background:#2a1420; border-color:#5b2138; }
+  .row { border-bottom:1px solid #1a2748; }
+  .row:active { background:#131f3d; }
+  .row .tg { color:#8fa1c4; }
+  .thumb { background:#1a2748; }
+  .thumb .lt { color:#7d8db0; }
+  .search { background:#0f1930; border-color:#22335e; color:#e8edf7; }
+  .backbtn { background:#131f3d; border-color:#22335e; color:#e8edf7; }
+  .msg, .spin { color:#8fa1c4; }
+  .pwrap { background:#0a1128; }
+  .status { color:#8fa1c4; }
+  .qrow button { background:#131f3d; border-color:#22335e; color:#e8edf7; }
+  .qrow button.on { background:#22c55e; border-color:#22c55e; color:#04120a; }
+  .navrow button { background:#131f3d; border-color:#22335e; color:#e8edf7; }
+  .setrow { border-bottom:1px solid #1a2748; }
+  .setrow .tx span { color:#8fa1c4; }
+  .installbtn { background:#22c55e; color:#04120a; }
+  .foot { color:#5f7194; }
+  .matchrow { background:#1d1220; border-color:#7f1d2e; }
+  .matchrow .tm { color:#f87171; }
+  .matchrow .lg { color:#8fa1c4; }
+  .focusgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .fcard { border-radius:16px; padding:18px 10px 14px; text-align:center; cursor:pointer; border:1px solid #22335e; }
+  .fcard:active { filter:brightness(1.25); }
+  .fcard.cric { background:linear-gradient(160deg,#14532d,#0f1930); }
+  .fcard.foot { background:linear-gradient(160deg,#1e3a8a,#0f1930); }
+  .fcard .em { font-size:34px; display:block; margin-bottom:6px; }
+  .fcard .lb { font-size:16px; font-weight:800; color:#fff; }
+  .fcard .sub { font-size:11.5px; color:#9fb4dd; display:block; margin-top:2px; }
+</style>
 </head>
 <body>
 <header>
@@ -82,6 +121,12 @@
 <!-- HOME -->
 <div class="screen active" id="scr-home">
   <button class="installbtn" id="installBtn">⬇️ Install App</button>
+  <h2>🔴 Aaj ke Matches</h2>
+  <div id="homeMatches"><div class="spin">Matches load ho rahe hain...</div></div>
+  <div class="focusgrid">
+    <div class="fcard cric" id="cricCard"><span class="em">🏏</span><span class="lb">Cricket</span><span class="sub">PTV Sports, Willow aur tamam cricket channels</span></div>
+    <div class="fcard foot" id="footCard"><span class="em">⚽</span><span class="lb">Football</span><span class="sub">beIN, ESPN aur tamam football channels</span></div>
+  </div>
   <div id="recentWrap" style="display:none">
     <h2>🕘 Recently Watched</h2>
     <div id="recentList"></div>
@@ -92,7 +137,7 @@
   <h2>Countries</h2>
   <input class="search" id="countrySearch" placeholder="Search country...">
   <div id="countryList"><div class="spin">Loading channels...</div></div>
-  <div class="foot">Saare channels pehle test karke lagaye gaye hain — jo chalte hain, wohi list mein hain.<br>Phir bhi koi stream kabhi band ho jaye to app khud dusri stream try kar leta hai.</div>
+  <div class="foot">Har channel ke sath backup streams hain — ek band mile to player khud dusri try karta hai.<br>Phir bhi sab band hon to koi aur channel try karein.</div>
 </div>
 
 <!-- LIST -->
@@ -237,6 +282,7 @@ async function loadData() {
   }
   renderCountries('');
   renderSportsList('');
+  loadHomeMatches();
 }
 function chans() { return DATA ? DATA.channels : []; }
 
@@ -380,6 +426,52 @@ async function loadMatches() {
       let list = sportsChannels().filter(c => keys.some(k => (c.n||'').toLowerCase().includes(k)));
       if (!list.length) list = sportsChannels();
       openList('🏆 ' + (ev.strEvent || 'Match'), list, 'Ye sports channels hain — jis channel par ye match live ho raha ho, wahan chal jayega. Agar kisi par match na ho to wo match free mein available nahi hai.');
+    });
+    el.appendChild(row);
+  });
+}
+
+/* ---------- Cricket / Football focus (v5) ---------- */
+function cricketChannels() {
+  const keys = ['cricket','willow','ptv sports','ten sports','a sports','geo super'];
+  const list = chans().filter(c => keys.some(k => (c.n||'').toLowerCase().includes(k)));
+  chans().filter(c => c.c === 'PK' && (c.g||[]).includes('sports')).forEach(c => { if (!list.includes(c)) list.push(c); });
+  return list;
+}
+function footballChannels() {
+  const keys = ['football','soccer','futbol','bein','sky sports','premier','laliga','la liga','serie a','bundesliga','champions','espn','sony sports','star sports','arena sport','supersport','fox sports','sport tv'];
+  return sportsChannels().filter(c => keys.some(k => (c.n||'').toLowerCase().includes(k)));
+}
+document.getElementById('cricCard').addEventListener('click', () => openList('🏏 Cricket', cricketChannels(), 'Cricket channels — PTV Sports aur Willow sameet. Jis channel par match live ho raha ho, wahan chal jayega.'));
+document.getElementById('footCard').addEventListener('click', () => openList('⚽ Football', footballChannels(), 'Football channels — beIN Sports aur ESPN sameet. Jis channel par match live ho raha ho, wahan chal jayega.'));
+async function loadHomeMatches() {
+  const el = document.getElementById('homeMatches');
+  if (!el) return;
+  const now = new Date();
+  const d = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  let events = [];
+  try {
+    const results = await Promise.all(['Cricket','Soccer'].map(s =>
+      fetch('https://www.thesportsdb.com/api/v1/json/123/eventsday.php?d=' + d + '&s=' + encodeURIComponent(s))
+        .then(r => r.json()).catch(() => null)
+    ));
+    results.forEach(r => { if (r && r.events) events = events.concat(r.events); });
+  } catch(e) {}
+  if (!events.length) {
+    el.innerHTML = '<div class="msg" style="padding:12px">Aaj ke matches ki list abhi nahi mil saki.<br>Cricket / Football cards se channels chala lein.</div>';
+    return;
+  }
+  events.sort((a,b) => (a.strTimestamp||'').localeCompare(b.strTimestamp||''));
+  el.innerHTML = '';
+  events.slice(0, 8).forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'matchrow';
+    let time = '';
+    if (ev.strTimestamp) { const t = new Date(ev.strTimestamp); time = t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+    row.innerHTML = '<div class="tm">'+(time || 'Today')+'</div><div class="ev">'+(ev.strEvent||'').replace(/</g,'')+'</div><div class="lg">'+(ev.strLeague||ev.strSport||'').replace(/</g,'')+'</div>';
+    row.addEventListener('click', () => {
+      if (ev.strSport === 'Cricket') openList('🏏 ' + (ev.strEvent || 'Match'), cricketChannels(), 'Cricket channels hain — jis channel par ye match live ho raha ho, wahan chal jayega.');
+      else openList('⚽ ' + (ev.strEvent || 'Match'), footballChannels(), 'Football channels hain — jis channel par ye match live ho raha ho, wahan chal jayega.');
     });
     el.appendChild(row);
   });
