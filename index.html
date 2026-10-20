@@ -12,10 +12,10 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { font-family:-apple-system, "Segoe UI", Roboto, Arial, sans-serif; background:#fff; color:#111; }
-  header { position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid #eee; padding:12px 14px; display:flex; align-items:center; gap:10px; }
-  header .logo { font-size:22px; font-weight:800; color:#e11d48; letter-spacing:.3px; }
+  header { position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid #eee; padding:12px 14px; display:flex; align-items:center; gap:8px; }
+  header .logo { font-size:20px; font-weight:800; color:#e11d48; letter-spacing:.2px; white-space:nowrap; }
   header .sp { flex:1; }
-  .iconbtn { border:1px solid #e5e5e5; background:#fff; border-radius:10px; width:40px; height:40px; font-size:19px; cursor:pointer; }
+  .iconbtn { border:1px solid #e5e5e5; background:#fff; border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer; }
   .screen { display:none; padding:14px; max-width:760px; margin:0 auto; }
   .screen.active { display:block; }
   h2 { font-size:16px; margin:16px 2px 10px; color:#111; }
@@ -25,13 +25,12 @@
   .card:active { background:#f1f1f1; }
   .card .em { font-size:30px; display:block; margin-bottom:6px; }
   .card .lb { font-size:14px; font-weight:600; }
-  .card .ct { font-size:11px; color:#888; margin-top:2px; }
   .card.adult { background:#fff5f5; border-color:#ffd6d6; }
   .row { display:flex; align-items:center; gap:10px; padding:11px 8px; border-bottom:1px solid #f0f0f0; cursor:pointer; }
   .row:active { background:#f7f7f7; }
   .row .flag { font-size:24px; width:34px; text-align:center; }
   .row .nm { flex:1; font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .row .tg { font-size:11px; color:#999; }
+  .row .tg { font-size:11px; color:#999; white-space:nowrap; }
   .thumb { width:46px; height:46px; border-radius:10px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow:hidden; flex:none; }
   .thumb img { width:100%; height:100%; object-fit:contain; }
   .thumb .lt { font-size:19px; font-weight:700; color:#9ca3af; }
@@ -41,11 +40,16 @@
   .backbar { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
   .backbtn { border:1px solid #e5e5e5; background:#fff; border-radius:10px; padding:8px 13px; font-size:15px; cursor:pointer; }
   .title { font-size:17px; font-weight:700; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .msg { text-align:center; color:#666; padding:34px 16px; font-size:14px; line-height:1.6; }
+  .msg { text-align:center; color:#666; padding:26px 16px; font-size:14px; line-height:1.6; }
   .spin { text-align:center; padding:38px; color:#888; font-size:14px; }
   video { width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; }
   .pwrap { position:sticky; top:65px; z-index:10; background:#fff; padding-bottom:8px; }
   .status { font-size:13px; color:#666; text-align:center; padding:9px 4px; min-height:20px; line-height:1.5; }
+  .qrow { display:flex; gap:8px; justify-content:center; padding:2px 0 6px; }
+  .qrow button { border:1px solid #e5e5e5; background:#fff; border-radius:20px; padding:7px 14px; font-size:13px; cursor:pointer; }
+  .qrow button.on { background:#111; color:#fff; border-color:#111; }
+  .navrow { display:flex; gap:10px; margin-top:4px; }
+  .navrow button { flex:1; padding:12px; border:1px solid #e5e5e5; background:#fafafa; border-radius:11px; font-size:15px; font-weight:600; cursor:pointer; }
   .setrow { display:flex; align-items:center; gap:12px; padding:15px 6px; border-bottom:1px solid #f0f0f0; }
   .setrow .tx { flex:1; }
   .setrow .tx b { font-size:15px; display:block; }
@@ -57,15 +61,20 @@
   .switch input:checked + .slider { background:#e11d48; }
   .switch input:checked + .slider:before { transform:translateX(22px); }
   .installbtn { display:none; width:100%; padding:14px; border:none; border-radius:12px; background:#e11d48; color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:6px; }
-  .navrow { display:flex; gap:10px; margin-top:4px; }
-  .navrow button { flex:1; padding:12px; border:1px solid #e5e5e5; background:#fafafa; border-radius:11px; font-size:15px; font-weight:600; cursor:pointer; }
   .foot { text-align:center; color:#aaa; font-size:12px; padding:26px 10px 10px; line-height:1.7; }
+  .matchrow { display:flex; align-items:center; gap:10px; padding:11px 8px; border:1px solid #ffe1e1; background:#fff7f7; border-radius:12px; margin-bottom:8px; cursor:pointer; }
+  .matchrow .tm { font-size:12px; font-weight:700; color:#e11d48; white-space:nowrap; }
+  .matchrow .ev { flex:1; font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .matchrow .lg { font-size:11px; color:#999; white-space:nowrap; }
+  #adSlot { display:none; margin:14px 0 0; text-align:center; }
+  #toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 18px; border-radius:22px; font-size:14px; display:none; z-index:50; }
 </style>
 </head>
 <body>
 <header>
   <div class="logo">📺 Live TV Channels</div>
   <div class="sp"></div>
+  <button class="iconbtn" id="shareTop" title="Share app">📤</button>
   <button class="iconbtn" id="favTop" title="Favorites">⭐</button>
   <button class="iconbtn" id="setTop" title="Settings">⚙️</button>
 </header>
@@ -79,10 +88,11 @@
   </div>
   <h2>Categories</h2>
   <div class="grid" id="catGrid"></div>
+  <div id="adSlot"></div>
   <h2>Countries</h2>
   <input class="search" id="countrySearch" placeholder="Search country...">
-  <div id="countryList"><div class="spin">Loading countries...</div></div>
-  <div class="foot">Free channels from public sources.<br>Kuch channels kabhi kabhi band ho sakte hain — ye free streams ki aadat hai.</div>
+  <div id="countryList"><div class="spin">Loading channels...</div></div>
+  <div class="foot">Saare channels pehle test karke lagaye gaye hain — jo chalte hain, wohi list mein hain.<br>Phir bhi koi stream kabhi band ho jaye to app khud dusri stream try kar leta hai.</div>
 </div>
 
 <!-- LIST -->
@@ -91,8 +101,22 @@
     <button class="backbtn" data-back>← Back</button>
     <div class="title" id="listTitle">Channels</div>
   </div>
+  <div id="listNote"></div>
   <input class="search" id="listSearch" placeholder="Search channel...">
   <div id="chanList"><div class="spin">Loading channels...</div></div>
+</div>
+
+<!-- SPORTS -->
+<div class="screen" id="scr-sports">
+  <div class="backbar">
+    <button class="backbtn" data-back>← Back</button>
+    <div class="title">⚽ Sports</div>
+  </div>
+  <h2>🔴 Aaj ke Matches</h2>
+  <div id="matchList"><div class="spin">Matches load ho rahe hain...</div></div>
+  <h2>Sports Channels</h2>
+  <input class="search" id="sportsSearch" placeholder="Search sports channel...">
+  <div id="sportsList"><div class="spin">Loading channels...</div></div>
 </div>
 
 <!-- PLAYER -->
@@ -105,12 +129,17 @@
   <div class="pwrap">
     <video id="vid" controls playsinline></video>
     <div class="status" id="playStatus">Loading...</div>
+    <div class="qrow" id="qRow">
+      <button data-q="low">📉 Kam MB</button>
+      <button data-q="auto">Auto</button>
+      <button data-q="high">📈 High</button>
+    </div>
   </div>
   <div class="navrow">
     <button id="prevCh">⏮ Pichla</button>
     <button id="nextCh">Agla ⏭</button>
   </div>
-  <div class="msg">Agar channel na chale to ye stream band hai.<br>Back ja kar koi aur channel try karein.</div>
+  <div class="msg">Agar ek stream band mile to app khud dusri stream try karta hai.<br>Sab streams band hon to koi aur channel try karein.</div>
 </div>
 
 <!-- SETTINGS -->
@@ -126,32 +155,47 @@
     </div>
     <label class="switch"><input type="checkbox" id="adultToggle"><span class="slider"></span></label>
   </div>
+  <div class="setrow" id="shareRow" style="cursor:pointer">
+    <div class="tx">
+      <b>📤 Share App</b>
+      <span>App ka link sab ke sath share karein — jo bhi link khole ga, app install kar sakta hai.</span>
+    </div>
+  </div>
   <div class="setrow">
     <div class="tx">
       <b>Live TV Channels</b>
-      <span>Sab countries ke free TV channels, ek hi app mein. Channels unhi broadcasters ke hain jo internet par free stream dete hain.</span>
+      <span>Sab countries ke free TV channels, ek hi app mein. Channels sirf wohi hain jo test mein chalte mile — band streams list se hata di gayi hain.</span>
     </div>
   </div>
 </div>
 
-<script>
-const BASE = 'https://iptv-org.github.io/iptv/';
-const CATS = [
-  { id:'sports', em:'⚽', lb:'Sports',  url: BASE+'categories/sports.m3u' },
-  { id:'comedy', em:'😂', lb:'Comedy',  url: BASE+'categories/comedy.m3u' },
-  { id:'movies', em:'🎬', lb:'Movies',  url: BASE+'categories/movies.m3u' },
-  { id:'drama',  em:'🎭', lb:'Drama',   url: BASE+'categories/series.m3u' },
-  { id:'news',   em:'📰', lb:'News',    url: BASE+'categories/news.m3u' },
-  { id:'xxx',    em:'🔞', lb:'18+',     url: BASE+'categories/xxx.m3u', adult:true },
-];
-let adultOn = localStorage.getItem('wtv_adult') === '1';
-let favs = [];
-try { favs = JSON.parse(localStorage.getItem('wtv_favs') || '[]'); } catch(e) { favs = []; }
-let countries = [];
-let recents = [];
-try { recents = JSON.parse(localStorage.getItem('wtv_recent') || '[]'); } catch(e) { recents = []; }
-let currentList = [], currentChannel = null, hls = null, navStack = ['scr-home'];
+<div id="toast"></div>
 
+<script>
+/* Ads: jab ad network ka code mile ga, yahan paste hoga aur home par ad nazar aye ga. Abhi khaali hai. */
+const AD_CODE = '';
+
+const CATS = [
+  { id:'sports', em:'⚽', lb:'Sports' },
+  { id:'comedy', em:'😂', lb:'Comedy', cat:'comedy' },
+  { id:'movies', em:'🎬', lb:'Movies', cat:'movies' },
+  { id:'drama',  em:'🎭', lb:'Drama',  cat:'series' },
+  { id:'news',   em:'📰', lb:'News',   cat:'news' },
+  { id:'xxx',    em:'🔞', lb:'18+',    adult:true },
+];
+let DATA = null;
+let adultOn = localStorage.getItem('wtv_adult') === '1';
+let favs = [], recents = [];
+try { favs = JSON.parse(localStorage.getItem('wtv_favs') || '[]'); } catch(e) {}
+try { recents = JSON.parse(localStorage.getItem('wtv_recent') || '[]'); } catch(e) {}
+let currentList = [], currentChannel = null, hls = null, navStack = ['scr-home'];
+let quality = localStorage.getItem('wtv_quality') || 'low';
+
+function toast(t) {
+  const el = document.getElementById('toast');
+  el.textContent = t; el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 2200);
+}
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -167,15 +211,34 @@ function back() {
 document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', back));
 document.getElementById('setTop').addEventListener('click', () => go('scr-settings'));
 document.getElementById('favTop').addEventListener('click', openFavs);
-
-function isFav(url) { return favs.some(f => f.url === url); }
-function toggleFav(ch) {
-  if (isFav(ch.url)) favs = favs.filter(f => f.url !== ch.url);
-  else favs.push({ name: ch.name, logo: ch.logo||'', url: ch.url, group: ch.group||'' });
-  localStorage.setItem('wtv_favs', JSON.stringify(favs));
-  renderList(currentList, document.getElementById('listTitle').textContent);
-  syncPlayFav();
+document.getElementById('shareTop').addEventListener('click', shareApp);
+document.getElementById('shareRow').addEventListener('click', shareApp);
+async function shareApp() {
+  const data = { title: 'Live TV Channels', text: 'Live TV Channels — sab countries ke free TV channels, ek hi app mein:', url: location.href.split('#')[0] };
+  if (navigator.share) { try { await navigator.share(data); } catch(e) {} }
+  else {
+    try { await navigator.clipboard.writeText(data.url); toast('Link copy ho giya — jahan chaho paste karke share kar do'); }
+    catch(e) { toast(data.url); }
+  }
 }
+
+/* ---------- Data (sirf tested/working channels) ---------- */
+async function loadData() {
+  try {
+    const r = await fetch('data-channels.json', { cache: 'no-cache' });
+    DATA = await r.json();
+    try { localStorage.setItem('wtv_data', JSON.stringify(DATA)); } catch(e) {}
+  } catch(e) {
+    try { DATA = JSON.parse(localStorage.getItem('wtv_data') || 'null'); } catch(e2) {}
+  }
+  if (!DATA) {
+    document.getElementById('countryList').innerHTML = '<div class="msg">Channels load nahi ho sake.<br>Internet check karke app dobara kholein.</div>';
+    return;
+  }
+  renderCountries('');
+  renderSportsList('');
+}
+function chans() { return DATA ? DATA.channels : []; }
 
 /* ---------- Categories ---------- */
 function renderCats() {
@@ -185,146 +248,169 @@ function renderCats() {
     const d = document.createElement('div');
     d.className = 'card' + (c.adult ? ' adult' : '');
     d.innerHTML = '<span class="em">'+c.em+'</span><span class="lb">'+c.lb+'</span>';
-    d.addEventListener('click', () => openPlaylist(c.lb, c.url, c.adult));
+    d.addEventListener('click', () => {
+      if (c.id === 'sports') openSports();
+      else if (c.adult) openAdult();
+      else openList(c.lb, chans().filter(x => (x.g || []).includes(c.cat)));
+    });
     g.appendChild(d);
   });
 }
 
 /* ---------- Countries ---------- */
-async function loadCountries() {
-  try {
-    const cached = JSON.parse(localStorage.getItem('wtv_countries') || 'null');
-    if (cached && Date.now() - cached.t < 7*24*3600*1000) countries = cached.d;
-    else {
-      const r = await fetch('https://iptv-org.github.io/api/countries.json');
-      countries = await r.json();
-      try { localStorage.setItem('wtv_countries', JSON.stringify({ t: Date.now(), d: countries })); } catch(e) {}
-    }
-  } catch(e) {
-    document.getElementById('countryList').innerHTML = '<div class="msg">Countries load nahi ho sakin.<br>Internet check karke app dobara kholein.</div>';
-    return;
-  }
-  renderCountries('');
-}
 function renderCountries(q) {
   const el = document.getElementById('countryList');
   el.innerHTML = '';
-  countries
-    .filter(c => c.name && c.code && c.name.toLowerCase().includes(q.toLowerCase()))
-    .forEach(c => {
+  const counts = {};
+  chans().forEach(x => { counts[x.c] = (counts[x.c] || 0) + 1; });
+  Object.keys(DATA.countries)
+    .filter(code => counts[code] && DATA.countries[code].name.toLowerCase().includes(q.toLowerCase()))
+    .sort((a,b) => DATA.countries[a].name.localeCompare(DATA.countries[b].name))
+    .forEach(code => {
+      const c = DATA.countries[code];
       const d = document.createElement('div');
       d.className = 'row';
-      d.innerHTML = '<div class="flag">'+(c.flag || '🏳️')+'</div><div class="nm">'+c.name+'</div><div class="tg">›</div>';
-      d.addEventListener('click', () => openPlaylist(c.name, BASE+'countries/'+c.code.toLowerCase()+'.m3u', false));
+      d.innerHTML = '<div class="flag">'+(c.flag || '🏳️')+'</div><div class="nm">'+c.name+'</div><div class="tg">'+counts[code]+' channels ›</div>';
+      d.addEventListener('click', () => openList(c.name, chans().filter(x => x.c === code)));
       el.appendChild(d);
     });
   if (!el.children.length) el.innerHTML = '<div class="msg">Koi country nahi mila.</div>';
 }
-document.getElementById('countrySearch').addEventListener('input', e => renderCountries(e.target.value));
+document.getElementById('countrySearch').addEventListener('input', e => { if (DATA) renderCountries(e.target.value); });
 
-/* ---------- Playlists ---------- */
-function parseM3U(text) {
-  const out = [];
-  let cur = null;
-  text.split('\n').forEach(raw => {
-    const line = raw.trim();
-    if (line.startsWith('#EXTINF')) {
-      const logo = (line.match(/tvg-logo="([^"]*)"/) || [])[1] || '';
-      const group = (line.match(/group-title="([^"]*)"/) || [])[1] || '';
-      const name = line.slice(line.lastIndexOf(',')+1).trim();
-      cur = { name, logo, group };
-    } else if (line && !line.startsWith('#') && cur) {
-      cur.url = line;
-      out.push(cur); cur = null;
-    }
-  });
-  const seen = new Set();
-  return out
-    .filter(c => c.url && c.name && !seen.has(c.url) && seen.add(c.url))
-    .filter(c => adultOn || !/xxx/i.test(c.group || ''))
-    .sort((a,b) => (b.url.startsWith('https') - a.url.startsWith('https')) || a.name.localeCompare(b.name));
+/* ---------- Generic channel list ---------- */
+function isFav(url) { return favs.some(f => f.u === url); }
+function toggleFav(ch) {
+  if (isFav(ch.u)) favs = favs.filter(f => f.u !== ch.u);
+  else favs.push({ n: ch.n, l: ch.l||'', u: ch.u, a: ch.a||[], c: ch.c||'', g: ch.g||[] });
+  localStorage.setItem('wtv_favs', JSON.stringify(favs));
+  refreshLists();
+  syncPlayFav();
 }
-async function fetchPlaylist(url) {
-  const key = 'wtv_pl_' + url;
-  try {
-    const cached = JSON.parse(localStorage.getItem(key) || 'null');
-    if (cached && Date.now() - cached.t < 12*3600*1000) return cached.d;
-  } catch(e) {}
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('http ' + r.status);
-  const items = parseM3U(await r.text());
-  try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: items })); } catch(e) {}
-  return items;
+function channelRow(ch) {
+  const d = document.createElement('div');
+  d.className = 'row';
+  const first = (ch.n || '?').trim().charAt(0).toUpperCase();
+  d.innerHTML = '<div class="thumb">' + (ch.l ? '<img loading="lazy" src="'+ch.l.replace(/"/g,'')+'" onerror="this.remove()">' : '') + '<span class="lt">'+first+'</span></div>' +
+    '<div class="nm">'+(ch.n||'').replace(/</g,'')+'</div>' +
+    '<button class="favbtn'+(isFav(ch.u)?' on':'')+'">'+(isFav(ch.u)?'★':'☆')+'</button>';
+  d.querySelector('.favbtn').addEventListener('click', ev => { ev.stopPropagation(); toggleFav(ch); });
+  d.addEventListener('click', () => playChannel(ch));
+  return d;
 }
-async function openPlaylist(title, url, isAdult) {
-  document.getElementById('listTitle').textContent = title;
+function fillList(el, items) {
+  el.innerHTML = '';
+  items.forEach(ch => el.appendChild(channelRow(ch)));
+  if (!items.length) el.innerHTML = '<div class="msg">Koi channel nahi mila.</div>';
+}
+function openList(title, items, note) {
+  document.getElementById('listTitle').textContent = title + (items.length ? ' (' + items.length + ')' : '');
   document.getElementById('listSearch').value = '';
-  document.getElementById('chanList').innerHTML = '<div class="spin">Loading channels...</div>';
+  document.getElementById('listNote').innerHTML = note ? '<div class="msg" style="padding:10px">'+note+'</div>' : '';
+  currentList = items.slice();
+  fillList(document.getElementById('chanList'), currentList);
   go('scr-list');
-  try {
-    currentList = await fetchPlaylist(url);
-    if (!currentList.length) {
-      document.getElementById('chanList').innerHTML = '<div class="msg">' +
-        (isAdult ? 'Is waqt free 18+ channels available nahi hain.<br>Free sources par in channels ki working streams taqreeban khatam ho chuki hain — jab dobara available hongi, yahan khud aa jayengi.'
-                 : 'Is list mein abhi koi channel available nahi.') + '</div>';
-      return;
-    }
-    renderList(currentList, title);
-  } catch(e) {
-    document.getElementById('chanList').innerHTML = '<div class="msg">Channels load nahi ho sake.<br>Internet check karke dobara try karein.</div>';
-  }
 }
 function openFavs() {
-  document.getElementById('listTitle').textContent = '⭐ Favorites';
-  document.getElementById('listSearch').value = '';
-  currentList = favs.slice();
-  go('scr-list');
-  if (!currentList.length) {
+  if (!favs.length) {
+    go('scr-list');
+    document.getElementById('listTitle').textContent = '⭐ Favorites';
+    document.getElementById('listNote').innerHTML = '';
     document.getElementById('chanList').innerHTML = '<div class="msg">Abhi koi favorite channel nahi.<br>Channel ke sath wale ☆ par tap karke favorite banayein.</div>';
+    currentList = [];
     return;
   }
-  renderList(currentList, '⭐ Favorites');
-}
-function renderList(items, title) {
-  document.getElementById('listTitle').textContent = title + (items.length ? ' (' + items.length + ')' : '');
-  const el = document.getElementById('chanList');
-  el.innerHTML = '';
-  items.forEach(ch => {
-    const d = document.createElement('div');
-    d.className = 'row';
-    const first = (ch.name || '?').trim().charAt(0).toUpperCase();
-    d.innerHTML = '<div class="thumb">' + (ch.logo ? '<img loading="lazy" src="'+ch.logo.replace(/"/g,'')+'" onerror="this.remove()">' : '') + '<span class="lt">'+first+'</span></div>' +
-      '<div class="nm">'+ch.name.replace(/</g,'')+'</div>' +
-      (ch.group ? '<div class="tg">'+ch.group.replace(/</g,'')+'</div>' : '') +
-      '<button class="favbtn'+(isFav(ch.url)?' on':'')+'">'+(isFav(ch.url)?'★':'☆')+'</button>';
-    d.querySelector('.favbtn').addEventListener('click', ev => { ev.stopPropagation(); toggleFav(ch); });
-    d.addEventListener('click', () => playChannel(ch));
-    el.appendChild(d);
-  });
-  if (!items.length) el.innerHTML = '<div class="msg">Koi channel nahi mila.</div>';
+  openList('⭐ Favorites', favs);
 }
 document.getElementById('listSearch').addEventListener('input', e => {
   const q = e.target.value.toLowerCase();
-  const t = document.getElementById('listTitle').textContent.replace(/ \(\d+\)$/, '');
-  renderList(currentList.filter(c => c.name.toLowerCase().includes(q)), t);
+  fillList(document.getElementById('chanList'), currentList.filter(c => (c.n||'').toLowerCase().includes(q)));
 });
+function refreshLists() {
+  if (document.getElementById('scr-list').classList.contains('active')) {
+    const q = document.getElementById('listSearch').value.toLowerCase();
+    fillList(document.getElementById('chanList'), currentList.filter(c => (c.n||'').toLowerCase().includes(q)));
+  }
+  if (document.getElementById('scr-sports').classList.contains('active')) {
+    const q = document.getElementById('sportsSearch').value.toLowerCase();
+    fillList(document.getElementById('sportsList'), sportsChannels().filter(c => (c.n||'').toLowerCase().includes(q)));
+  }
+}
 
-/* ---------- Player ---------- */
-function stopPlayer() {
-  const v = document.getElementById('vid');
-  try { v.pause(); v.removeAttribute('src'); v.load(); } catch(e) {}
-  if (hls) { try { hls.destroy(); } catch(e) {} hls = null; }
+/* ---------- Sports + today's matches ---------- */
+function sportsChannels() { return chans().filter(x => (x.g || []).includes('sports')); }
+function renderSportsList(q) {
+  fillList(document.getElementById('sportsList'), sportsChannels().filter(c => (c.n||'').toLowerCase().includes(q.toLowerCase())));
 }
-function syncPlayFav() {
-  if (!currentChannel) return;
-  const b = document.getElementById('playFav');
-  b.textContent = isFav(currentChannel.url) ? '★' : '☆';
-  b.classList.toggle('on', isFav(currentChannel.url));
+document.getElementById('sportsSearch').addEventListener('input', e => renderSportsList(e.target.value));
+function openSports() {
+  go('scr-sports');
+  renderSportsList(document.getElementById('sportsSearch').value || '');
+  loadMatches();
 }
-document.getElementById('playFav').addEventListener('click', () => { if (currentChannel) toggleFav(currentChannel); });
+const SPORT_KEYS = { 'Cricket':['cricket'], 'Soccer':['football','soccer','futbol'], 'Basketball':['basketball','nba'], 'Ice Hockey':['hockey'], 'Baseball':['baseball','mlb'], 'American Football':['nfl','american football'], 'Tennis':['tennis'], 'Rugby':['rugby'] };
+async function loadMatches() {
+  const el = document.getElementById('matchList');
+  el.innerHTML = '<div class="spin">Matches load ho rahe hain...</div>';
+  const now = new Date();
+  const d = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  const sports = Object.keys(SPORT_KEYS);
+  let events = [];
+  try {
+    const results = await Promise.all(sports.map(s =>
+      fetch('https://www.thesportsdb.com/api/v1/json/123/eventsday.php?d=' + d + '&s=' + encodeURIComponent(s))
+        .then(r => r.json()).catch(() => null)
+    ));
+    results.forEach(r => { if (r && r.events) events = events.concat(r.events); });
+  } catch(e) {}
+  if (!events.length) {
+    el.innerHTML = '<div class="msg" style="padding:14px">Aaj ke matches ki list abhi nahi mil saki.<br>Neeche sports channels se apna match wala channel chala lein.</div>';
+    return;
+  }
+  events.sort((a,b) => (a.strTimestamp||'').localeCompare(b.strTimestamp||''));
+  el.innerHTML = '';
+  events.slice(0, 40).forEach(ev => {
+    const row = document.createElement('div');
+    row.className = 'matchrow';
+    let time = '';
+    if (ev.strTimestamp) { const t = new Date(ev.strTimestamp); time = t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+    row.innerHTML = '<div class="tm">'+(time || 'Today')+'</div><div class="ev">'+(ev.strEvent||'').replace(/</g,'')+'</div><div class="lg">'+(ev.strLeague||ev.strSport||'').replace(/</g,'')+'</div>';
+    row.addEventListener('click', () => {
+      const keys = SPORT_KEYS[ev.strSport] || [];
+      let list = sportsChannels().filter(c => keys.some(k => (c.n||'').toLowerCase().includes(k)));
+      if (!list.length) list = sportsChannels();
+      openList('🏆 ' + (ev.strEvent || 'Match'), list, 'Ye sports channels hain — jis channel par ye match live ho raha ho, wahan chal jayega. Agar kisi par match na ho to wo match free mein available nahi hai.');
+    });
+    el.appendChild(row);
+  });
+}
+
+/* ---------- 18+ (sirf working/tested, settings gate ke peeche) ---------- */
+async function openAdult() {
+  document.getElementById('listTitle').textContent = '🔞 18+';
+  document.getElementById('listNote').innerHTML = '';
+  document.getElementById('chanList').innerHTML = '<div class="spin">Loading channels...</div>';
+  document.getElementById('listSearch').value = '';
+  go('scr-list');
+  try {
+    const r = await fetch('adult.json', { cache: 'no-cache' });
+    const j = await r.json();
+    currentList = (j.channels || []).map(x => ({ n: x.n, l: x.l||'', u: x.u, a: x.a||[], c: '', g: ['xxx'] }));
+    if (!currentList.length) {
+      document.getElementById('chanList').innerHTML = '<div class="msg">Is waqt koi working free 18+ channel available nahi.<br>Free sources par in ki streams taqreeban khatam ho chuki hain — jab koi working stream mile gi, yahan aa jaye gi.</div>';
+      return;
+    }
+    document.getElementById('listTitle').textContent = '🔞 18+ (' + currentList.length + ')';
+    fillList(document.getElementById('chanList'), currentList);
+  } catch(e) {
+    document.getElementById('chanList').innerHTML = '<div class="msg">Load nahi ho saka — internet check karke dobara try karein.</div>';
+  }
+}
+
+/* ---------- Recents ---------- */
 function pushRecent(ch) {
-  recents = recents.filter(f => f.url !== ch.url);
-  recents.unshift({ name: ch.name, logo: ch.logo||'', url: ch.url, group: ch.group||'' });
+  recents = recents.filter(f => f.u !== ch.u);
+  recents.unshift({ n: ch.n, l: ch.l||'', u: ch.u, a: ch.a||[], c: ch.c||'', g: ch.g||[] });
   recents = recents.slice(0, 8);
   localStorage.setItem('wtv_recent', JSON.stringify(recents));
   renderRecent();
@@ -336,14 +422,25 @@ function renderRecent() {
   w.style.display = 'block';
   el.innerHTML = '';
   recents.forEach(ch => {
-    const dv = document.createElement('div');
-    dv.className = 'row';
-    const first = (ch.name || '?').trim().charAt(0).toUpperCase();
-    dv.innerHTML = '<div class="thumb">' + (ch.logo ? '<img loading="lazy" src="'+ch.logo.replace(/"/g,'')+'" onerror="this.remove()">' : '') + '<span class="lt">'+first+'</span></div><div class="nm">'+ch.name.replace(/</g,'')+'</div><div class="tg">›</div>';
-    dv.addEventListener('click', () => { currentList = recents.slice(); playChannel(ch); });
+    const dv = channelRow(ch);
+    dv.addEventListener('click', () => { currentList = recents.slice(); }, true);
     el.appendChild(dv);
   });
 }
+
+/* ---------- Player (auto-failover + quality) ---------- */
+function stopPlayer() {
+  const v = document.getElementById('vid');
+  try { v.pause(); v.removeAttribute('src'); v.load(); } catch(e) {}
+  if (hls) { try { hls.destroy(); } catch(e) {} hls = null; }
+}
+function syncPlayFav() {
+  if (!currentChannel) return;
+  const b = document.getElementById('playFav');
+  b.textContent = isFav(currentChannel.u) ? '★' : '☆';
+  b.classList.toggle('on', isFav(currentChannel.u));
+}
+document.getElementById('playFav').addEventListener('click', () => { if (currentChannel) toggleFav(currentChannel); });
 function playChannel(ch) {
   pushRecent(ch);
   go('scr-player');
@@ -351,7 +448,7 @@ function playChannel(ch) {
 }
 function stepChannel(delta) {
   if (!currentList.length || !currentChannel) return;
-  let i = currentList.findIndex(c => c.url === currentChannel.url);
+  let i = currentList.findIndex(c => c.u === currentChannel.u);
   if (i < 0) return;
   i = (i + delta + currentList.length) % currentList.length;
   pushRecent(currentList[i]);
@@ -359,25 +456,59 @@ function stepChannel(delta) {
 }
 document.getElementById('prevCh').addEventListener('click', () => stepChannel(-1));
 document.getElementById('nextCh').addEventListener('click', () => stepChannel(1));
+function markQuality() {
+  document.querySelectorAll('#qRow button').forEach(b => b.classList.toggle('on', b.dataset.q === quality));
+}
+document.querySelectorAll('#qRow button').forEach(b => b.addEventListener('click', () => {
+  quality = b.dataset.q;
+  localStorage.setItem('wtv_quality', quality);
+  markQuality();
+  applyQuality();
+  toast(quality === 'low' ? 'Kam MB mode — data kam lage ga' : quality === 'high' ? 'High quality mode' : 'Auto quality');
+}));
+function applyQuality() {
+  if (!hls || !hls.levels || !hls.levels.length) return;
+  if (quality === 'low') {
+    let min = 0; hls.levels.forEach((l, i) => { if (l.bitrate < hls.levels[min].bitrate) min = i; });
+    hls.currentLevel = min; hls.nextLevel = min;
+  } else if (quality === 'high') {
+    let max = 0; hls.levels.forEach((l, i) => { if (l.bitrate > hls.levels[max].bitrate) max = i; });
+    hls.currentLevel = max; hls.nextLevel = max;
+  } else { hls.currentLevel = -1; hls.nextLevel = -1; }
+}
+let playSeq = 0;
 function startPlayback(ch) {
   currentChannel = ch;
-  document.getElementById('playTitle').textContent = ch.name;
-  document.getElementById('playStatus').textContent = 'Loading...';
+  document.getElementById('playTitle').textContent = ch.n;
   syncPlayFav();
-  stopPlayer();
-  const v = document.getElementById('vid');
+  markQuality();
+  const seq = ++playSeq;
+  const urls = [ch.u].concat(ch.a || []);
+  let idx = 0;
   const st = document.getElementById('playStatus');
-  if (window.Hls && Hls.isSupported() && ch.url.includes('.m3u8')) {
-    hls = new Hls({ maxBufferLength: 30 });
-    hls.loadSource(ch.url);
-    hls.attachMedia(v);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => { st.textContent = ch.name; v.play().catch(() => { st.textContent = 'Play button dabayein ▶'; }); });
-    hls.on(Hls.Events.ERROR, (ev, data) => { if (data.fatal) st.textContent = 'Ye channel abhi nahi chal raha — stream band hai.'; });
-  } else {
-    v.src = ch.url;
-    v.play().then(() => { st.textContent = ch.name; }).catch(() => { st.textContent = 'Play button dabayein ▶'; });
-    v.addEventListener('error', () => { st.textContent = 'Ye channel abhi nahi chal raha — stream band hai.'; }, { once: true });
-  }
+  const tryNext = () => {
+    if (seq !== playSeq) return;
+    if (idx >= urls.length) {
+      st.textContent = 'Is channel ki saari streams abhi band hain — koi aur channel try karein.';
+      return;
+    }
+    const url = urls[idx++];
+    st.textContent = idx > 1 ? 'Pehli stream band thi — dusri working stream lag rahi hai...' : 'Loading...';
+    stopPlayer();
+    const v = document.getElementById('vid');
+    if (window.Hls && Hls.isSupported() && url.includes('.m3u8')) {
+      hls = new Hls({ maxBufferLength: 30, capLevelToPlayerSize: true });
+      hls.loadSource(url);
+      hls.attachMedia(v);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => { if (seq !== playSeq) return; applyQuality(); st.textContent = ch.n; v.play().catch(() => { st.textContent = 'Play button dabayein ▶'; }); });
+      hls.on(Hls.Events.ERROR, (ev, data) => { if (seq === playSeq && data.fatal) tryNext(); });
+    } else {
+      v.src = url;
+      v.play().then(() => { if (seq === playSeq) st.textContent = ch.n; }).catch(() => { if (seq === playSeq) st.textContent = 'Play button dabayein ▶'; });
+      v.addEventListener('error', () => { if (seq === playSeq) tryNext(); }, { once: true });
+    }
+  };
+  tryNext();
 }
 
 /* ---------- Settings ---------- */
@@ -401,10 +532,17 @@ document.getElementById('installBtn').addEventListener('click', async () => {
 });
 window.addEventListener('appinstalled', () => { document.getElementById('installBtn').style.display = 'none'; });
 
+/* ---------- Ads slot (AD_CODE khaali ho to kuch nahi dikhta) ---------- */
+if (AD_CODE) {
+  const slot = document.getElementById('adSlot');
+  slot.style.display = 'block';
+  slot.innerHTML = AD_CODE;
+}
+
 /* ---------- Init ---------- */
 renderCats();
 renderRecent();
-loadCountries();
+loadData();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>

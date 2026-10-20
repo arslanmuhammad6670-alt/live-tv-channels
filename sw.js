@@ -1,4 +1,4 @@
-const CACHE = 'livetv-v2';
+const CACHE = 'livetv-v3';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -8,12 +8,19 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  if (url.origin === location.origin) {
-    e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request).then(r => {
+  if (url.origin !== location.origin) return;
+  // Data files (channel lists): network first, cache as fallback — lists stay fresh.
+  if (url.pathname.endsWith('data-channels.json') || url.pathname.endsWith('adult.json')) {
+    e.respondWith(fetch(e.request).then(r => {
       const copy = r.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return r;
-    })));
+    }).catch(() => caches.match(e.request)));
+    return;
   }
-  // External data (channel lists) always goes to network; the app caches parsed lists itself.
+  e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request).then(r => {
+    const copy = r.clone();
+    caches.open(CACHE).then(c => c.put(e.request, copy));
+    return r;
+  })));
 });

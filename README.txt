@@ -27,6 +27,34 @@ SETTINGS WALI BAAT:
   khaali mile gi. Jab koi working free stream dobara ayegi, channel
   khud list mein aa jaye ga.
 
+WORKING STREAMS WALA SYSTEM:
+- App ki lists ab raw nahi hain. Har stream ko pehle test kiya jata hai —
+  sirf wohi channel list mein aata hai jo asal mein chalta hai aur mobile
+  browser mein play ho sakta hai.
+- Har channel ke sath 2-4 backup streams bhi hoti hain: pehli band mile
+  to player khud dusri, phir teesri try karta hai.
+- Player mein quality button hai: "Kam MB" (default) data kam khata hai,
+  "High" best quality deta hai.
+
+SPORTS MATCHES:
+- Sports kholne par upar "Aaj ke Matches" aate hain (football, cricket,
+  basketball, tennis waghera — jo free data mein available hon).
+- Match par tap karne se us sport ke channels khul jate hain.
+
+SHARE:
+- Upar 📤 button se app ka link kisi ko bhi bhej sakte ho — link kholne
+  wala app install kar sakta hai.
+
+ADS / MONEY (MONETIZATION):
+- App mein ads ki jagah tayyar hai, lekin ads chalane ke liye ad network
+  par account TUMHE banana hoga (paisay tumhare naam/account mein aate
+  hain, is liye sign-up tumhara hona chahiye).
+- Asaan tareeqa: Monetag (monetag.com) ya Adsterra (adsterra.com) par
+  free account banao → website add karo: 
+  arslanmuhammad6670-alt.github.io/live-tv-channels
+  → wahan se ek chhota sa ad code mile ga → wo code mujhe bhej dena,
+  mein app mein laga dunga, ads chal parein ge.
+
 NAYE FEATURES:
 - Home par "Install App" button (ek tap se install).
 - Player mein "Pichla / Agla" button — back kiye baghair channel badlo.
