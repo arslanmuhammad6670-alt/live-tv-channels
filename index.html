@@ -56,6 +56,9 @@
   .slider:before { content:""; position:absolute; width:24px; height:24px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
   .switch input:checked + .slider { background:#e11d48; }
   .switch input:checked + .slider:before { transform:translateX(22px); }
+  .installbtn { display:none; width:100%; padding:14px; border:none; border-radius:12px; background:#e11d48; color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:6px; }
+  .navrow { display:flex; gap:10px; margin-top:4px; }
+  .navrow button { flex:1; padding:12px; border:1px solid #e5e5e5; background:#fafafa; border-radius:11px; font-size:15px; font-weight:600; cursor:pointer; }
   .foot { text-align:center; color:#aaa; font-size:12px; padding:26px 10px 10px; line-height:1.7; }
 </style>
 </head>
@@ -69,6 +72,11 @@
 
 <!-- HOME -->
 <div class="screen active" id="scr-home">
+  <button class="installbtn" id="installBtn">⬇️ Install App</button>
+  <div id="recentWrap" style="display:none">
+    <h2>🕘 Recently Watched</h2>
+    <div id="recentList"></div>
+  </div>
   <h2>Categories</h2>
   <div class="grid" id="catGrid"></div>
   <h2>Countries</h2>
@@ -97,6 +105,10 @@
   <div class="pwrap">
     <video id="vid" controls playsinline></video>
     <div class="status" id="playStatus">Loading...</div>
+  </div>
+  <div class="navrow">
+    <button id="prevCh">⏮ Pichla</button>
+    <button id="nextCh">Agla ⏭</button>
   </div>
   <div class="msg">Agar channel na chale to ye stream band hai.<br>Back ja kar koi aur channel try karein.</div>
 </div>
@@ -136,6 +148,8 @@ let adultOn = localStorage.getItem('wtv_adult') === '1';
 let favs = [];
 try { favs = JSON.parse(localStorage.getItem('wtv_favs') || '[]'); } catch(e) { favs = []; }
 let countries = [];
+let recents = [];
+try { recents = JSON.parse(localStorage.getItem('wtv_recent') || '[]'); } catch(e) { recents = []; }
 let currentList = [], currentChannel = null, hls = null, navStack = ['scr-home'];
 
 function show(id) {
@@ -148,7 +162,7 @@ function back() {
   stopPlayer();
   navStack.pop();
   show(navStack[navStack.length-1] || 'scr-home');
-  if ((navStack[navStack.length-1] || 'scr-home') === 'scr-home') renderCats();
+  if ((navStack[navStack.length-1] || 'scr-home') === 'scr-home') { renderCats(); renderRecent(); }
 }
 document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', back));
 document.getElementById('setTop').addEventListener('click', () => go('scr-settings'));
@@ -308,12 +322,48 @@ function syncPlayFav() {
   b.classList.toggle('on', isFav(currentChannel.url));
 }
 document.getElementById('playFav').addEventListener('click', () => { if (currentChannel) toggleFav(currentChannel); });
+function pushRecent(ch) {
+  recents = recents.filter(f => f.url !== ch.url);
+  recents.unshift({ name: ch.name, logo: ch.logo||'', url: ch.url, group: ch.group||'' });
+  recents = recents.slice(0, 8);
+  localStorage.setItem('wtv_recent', JSON.stringify(recents));
+  renderRecent();
+}
+function renderRecent() {
+  const w = document.getElementById('recentWrap');
+  const el = document.getElementById('recentList');
+  if (!recents.length) { w.style.display = 'none'; return; }
+  w.style.display = 'block';
+  el.innerHTML = '';
+  recents.forEach(ch => {
+    const dv = document.createElement('div');
+    dv.className = 'row';
+    const first = (ch.name || '?').trim().charAt(0).toUpperCase();
+    dv.innerHTML = '<div class="thumb">' + (ch.logo ? '<img loading="lazy" src="'+ch.logo.replace(/"/g,'')+'" onerror="this.remove()">' : '') + '<span class="lt">'+first+'</span></div><div class="nm">'+ch.name.replace(/</g,'')+'</div><div class="tg">›</div>';
+    dv.addEventListener('click', () => { currentList = recents.slice(); playChannel(ch); });
+    el.appendChild(dv);
+  });
+}
 function playChannel(ch) {
+  pushRecent(ch);
+  go('scr-player');
+  startPlayback(ch);
+}
+function stepChannel(delta) {
+  if (!currentList.length || !currentChannel) return;
+  let i = currentList.findIndex(c => c.url === currentChannel.url);
+  if (i < 0) return;
+  i = (i + delta + currentList.length) % currentList.length;
+  pushRecent(currentList[i]);
+  startPlayback(currentList[i]);
+}
+document.getElementById('prevCh').addEventListener('click', () => stepChannel(-1));
+document.getElementById('nextCh').addEventListener('click', () => stepChannel(1));
+function startPlayback(ch) {
   currentChannel = ch;
   document.getElementById('playTitle').textContent = ch.name;
   document.getElementById('playStatus').textContent = 'Loading...';
   syncPlayFav();
-  go('scr-player');
   stopPlayer();
   const v = document.getElementById('vid');
   const st = document.getElementById('playStatus');
@@ -339,8 +389,21 @@ tg.addEventListener('change', () => {
   renderCats();
 });
 
+/* ---------- Install ---------- */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'block';
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; document.getElementById('installBtn').style.display = 'none'; }
+});
+window.addEventListener('appinstalled', () => { document.getElementById('installBtn').style.display = 'none'; });
+
 /* ---------- Init ---------- */
 renderCats();
+renderRecent();
 loadCountries();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
