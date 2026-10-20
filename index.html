@@ -139,6 +139,7 @@
   <div class="focusgrid">
     <div class="fcard cric" id="cricCard"><span class="em">🏏</span><span class="lb">Cricket</span><span class="sub">PTV Sports, Willow aur tamam cricket channels</span></div>
     <div class="fcard foot" id="footCard"><span class="em">⚽</span><span class="lb">Football</span><span class="sub">beIN, ESPN aur tamam football channels</span></div>
+    <div class="fcard" id="m3uCard" style="display:none; grid-column:1/-1; background:linear-gradient(160deg,#3b0764,#0f1930)"><span class="em">📂</span><span class="lb">Meri Playlist</span><span class="sub" id="m3uCardSub">Tumhari apni M3U playlist ke channels</span></div>
   </div>
   <div id="recentWrap" style="display:none">
     <h2>🕘 Recently Watched</h2>
@@ -219,6 +220,16 @@
       <b>📤 Share App</b>
       <span>App ka link sab ke sath share karein — jo bhi link khole ga, app install kar sakta hai.</span>
     </div>
+  </div>
+  <div style="padding:15px 6px; border-bottom:1px solid #1a2748">
+    <b style="font-size:15px">📂 Apni M3U Playlist</b>
+    <span style="font-size:12.5px; color:#8fa1c4; display:block; margin:2px 0 8px; line-height:1.45">Apni M3U playlist ka link yahan dalein — us ke channels app mein "Meri Playlist" mein aa jayenge. Playlist sirf is device par rehti hai.</span>
+    <input class="search" id="m3uUrl" placeholder="https://... .m3u link paste karein">
+    <div style="display:flex; gap:8px">
+      <button class="backbtn" id="m3uLoadBtn" style="flex:1; font-weight:700">Load Karo</button>
+      <button class="backbtn" id="m3uRemoveBtn" style="flex:1; display:none">Playlist Hatao</button>
+    </div>
+    <div id="m3uStatus" style="font-size:12.5px; color:#8fa1c4; padding-top:8px; line-height:1.5"></div>
   </div>
   <div class="setrow">
     <div class="tx">
@@ -661,6 +672,69 @@ document.getElementById('fsBtn').addEventListener('click', async () => {
     if (screen.orientation && screen.orientation.lock) { try { await screen.orientation.lock('landscape'); } catch(e) {} }
   } catch(e) { toast('Full screen is device par nahi ho saka'); }
 });
+
+/* ---------- Apni M3U Playlist (v7 — sirf is device par) ---------- */
+let customChannels = [];
+try {
+  const saved = JSON.parse(localStorage.getItem('wtv_m3u') || 'null');
+  if (saved && saved.channels) { customChannels = saved.channels; const ui = document.getElementById('m3uUrl'); if (ui) ui.value = saved.url || ''; }
+} catch(e) {}
+function renderCustomCard() {
+  const card = document.getElementById('m3uCard');
+  const rm = document.getElementById('m3uRemoveBtn');
+  if (!card) return;
+  if (customChannels.length) {
+    card.style.display = 'block';
+    document.getElementById('m3uCardSub').textContent = customChannels.length + ' channels — tumhari apni M3U playlist';
+    if (rm) rm.style.display = 'block';
+  } else {
+    card.style.display = 'none';
+    if (rm) rm.style.display = 'none';
+  }
+}
+async function loadCustomM3U() {
+  const url = (document.getElementById('m3uUrl').value || '').trim();
+  const st = document.getElementById('m3uStatus');
+  if (!url.startsWith('http')) { st.textContent = 'Pehle sahi link paste karein.'; return; }
+  st.textContent = 'Playlist load ho rahi hai...';
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('bad');
+    const text = await r.text();
+    const lines = text.split(/\r?\n/);
+    const out = [];
+    let meta = null;
+    for (const line of lines) {
+      if (line.indexOf('#EXTINF') === 0) {
+        const nm = (line.split(',').pop() || 'Channel').trim().replace(/</g, '');
+        const lm = line.match(/tvg-logo="([^"]*)"/);
+        meta = { n: nm, l: lm ? lm[1] : '', u: '', a: [], c: '', g: ['custom'] };
+      } else if (line.indexOf('http') === 0 && meta) {
+        if (line.indexOf('https://') === 0) { meta.u = line.trim(); out.push(meta); }
+        meta = null;
+      }
+      if (out.length >= 2000) break;
+    }
+    if (!out.length) { st.textContent = 'Is playlist mein koi channel nahi mila — link check karein.'; return; }
+    customChannels = out;
+    try { localStorage.setItem('wtv_m3u', JSON.stringify({ url: url, channels: out })); } catch(e) { st.textContent = 'Channels load ho gaye, lekin playlist bohat bari hai — is device par save nahi ho saki, is dafa ke liye chalegi.'; renderCustomCard(); return; }
+    st.textContent = out.length + ' channels load ho gaye — Home par "Meri Playlist" card aa gaya hai.';
+    renderCustomCard();
+    toast(out.length + ' channels add ho gaye');
+  } catch(e) {
+    st.textContent = 'Playlist load nahi ho saki — ya link ghalat hai, ya us website ne app ko ijazat nahi di. GitHub jaise links aam tor par chal jate hain.';
+  }
+}
+document.getElementById('m3uLoadBtn').addEventListener('click', loadCustomM3U);
+document.getElementById('m3uRemoveBtn').addEventListener('click', () => {
+  customChannels = [];
+  try { localStorage.removeItem('wtv_m3u'); } catch(e) {}
+  document.getElementById('m3uUrl').value = '';
+  document.getElementById('m3uStatus').textContent = 'Playlist hata di gayi.';
+  renderCustomCard();
+});
+document.getElementById('m3uCard').addEventListener('click', () => openList('📂 Meri Playlist', customChannels, 'Ye channels tumhari apni M3U playlist se hain — sirf is device par hain.'));
+renderCustomCard();
 
 /* ---------- Settings ---------- */
 const tg = document.getElementById('adultToggle');
