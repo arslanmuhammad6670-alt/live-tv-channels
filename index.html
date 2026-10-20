@@ -287,6 +287,16 @@ function back() {
   show(navStack[navStack.length-1] || 'scr-home');
   if ((navStack[navStack.length-1] || 'scr-home') === 'scr-home') { renderCats(); renderRecent(); }
 }
+/* Mobile back key: pehle app ke andar wapas — seedha band nahi (v8) */
+let exitArmed = false;
+function trapBack() { try { history.pushState({ ltv: 1 }, ''); } catch(e) {} }
+trapBack();
+window.addEventListener('popstate', () => {
+  if (document.fullscreenElement) return;
+  if (navStack.length > 1) { back(); trapBack(); }
+  else if (!exitArmed) { exitArmed = true; toast('App band karne ke liye dobara back dabayein'); trapBack(); setTimeout(() => { exitArmed = false; }, 2500); }
+  else { try { history.back(); } catch(e) {} }
+});
 document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', back));
 document.getElementById('setTop').addEventListener('click', () => go('scr-settings'));
 document.getElementById('favTop').addEventListener('click', openFavs);
@@ -612,7 +622,7 @@ function startPlayback(ch) {
   markQuality();
   const seq = ++playSeq;
   const urls = [ch.u].concat(ch.a || []);
-  let idx = 0;
+  let idx = 0, retries = 0;
   const st = document.getElementById('playStatus');
   const v = document.getElementById('vid');
   let watchdog = null, progressed = false;
@@ -624,6 +634,7 @@ function startPlayback(ch) {
     if (seq !== playSeq) { cleanup(); return; }
     clearWatch();
     progressed = false;
+    retries = 0;
     if (idx >= urls.length) {
       cleanup();
       st.textContent = 'Is channel ki saari streams abhi band hain — koi aur channel try karein.';
@@ -640,7 +651,12 @@ function startPlayback(ch) {
       hls.attachMedia(v);
       hls.on(Hls.Events.MANIFEST_PARSED, () => { if (seq !== playSeq) return; applyQuality(); st.textContent = ch.n; v.play().catch(() => { st.textContent = 'Play button dabayein ▶'; }); });
       hls.on(Hls.Events.FRAG_BUFFERED, () => { if (seq === playSeq) onProgress(); });
-      hls.on(Hls.Events.ERROR, (ev, data) => { if (seq === playSeq && data.fatal) tryNext(); });
+      hls.on(Hls.Events.ERROR, (ev, data) => {
+        if (seq !== playSeq || !data.fatal) return;
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR && retries < 2) { retries++; try { hls.startLoad(); } catch(e){} return; }
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR && retries < 2) { retries++; try { hls.recoverMediaError(); } catch(e){} return; }
+        tryNext();
+      });
     } else {
       v.src = url;
       v.play().then(() => { if (seq === playSeq) st.textContent = ch.n; }).catch(() => { if (seq === playSeq) st.textContent = 'Play button dabayein ▶'; });
